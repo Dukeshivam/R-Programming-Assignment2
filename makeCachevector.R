@@ -1,46 +1,47 @@
 setwd("C:/Users/Shivam Dey/OneDrive/Documents/GitHub/R-Programming-Assignment2/R-Programming-Assignment2")
 
-makeVector <- function(x = numeric()) {
-  m <- NULL  
+makeCacheMatrix <- function(x = matrix()) {
+  inv <- NULL  
   
+ 
   set <- function(y) {
-    x <<- y  
-    m <<- NULL  
+    x <<- y
+    inv <<- NULL  
   }
-  
+
   get <- function() x
-  
-  setmean <- function(mean) m <<- mean
-  
-  getmean <- function() m
-  
+  setInverse <- function(inverse) inv <<- inverse
+getInverse <- function() inv
   list(set = set, get = get,
-       setmean = setmean,
-       getmean = getmean)
+       setInverse = setInverse,
+       getInverse = getInverse)
 }
 
-cachemean <- function(x,...) {
-  m <- x$getmean()  
+cacheSolve <- function(x, ...) {
+  inv <- x$getInverse()  
   
-  if (!is.null(m)) {
-    message("Getting cached mean")
-    return(m)  
+  if (!is.null(inv)) {
+    message("Getting cached inverse")
+    return(inv)
   }
   
-  data <- x$get()  
-  if (length(data) == 0) {
-    stop("Error: Vector is empty")  
-  }
+  mat <- x$get()  
+  inv <- solve(mat, ...)
+  x$setInverse(inv)  
   
-  m <- mean(data,1)  
-  x$setmean(m)  
-  
-  return(m)
+  return(inv)
 }
 
-v <- makeVector(c(1, 2, 3, 4, 5))  
 
-cachemean(v)  
-cachemean(v)  
 
+mat <- matrix(c(9,7,4,1), nrow = 2, ncol = 2)
+
+
+cacheMat <- makeCacheMatrix(mat)
+
+
+cacheSolve(cacheMat)  
+
+
+cacheSolve(cacheMat) 
 
